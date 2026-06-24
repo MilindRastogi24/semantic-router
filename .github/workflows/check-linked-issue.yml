@@ -39,21 +39,6 @@ jobs:
                         url
                       }
                     }
-                    # Sidebar linking (Development panel) is not checked — it does not
-                    # retrigger this workflow and is easy to miss. Use Closes #N instead.
-                    # timelineItems(first: 50, itemTypes: [CONNECTED_EVENT]) {
-                    #   nodes {
-                    #     ... on ConnectedEvent {
-                    #       subject {
-                    #         ... on Issue {
-                    #           number
-                    #           title
-                    #           url
-                    #         }
-                    #       }
-                    #     }
-                    #   }
-                    # }
                   }
                 }
               }
@@ -65,15 +50,8 @@ jobs:
               number: context.payload.pull_request.number,
             });
 
-            const closingIssues =
+            const linkedIssues =
               repository.pullRequest.closingIssuesReferences.nodes ?? [];
-            // Sidebar-linked issues (CONNECTED_EVENT) are intentionally not checked.
-            // const connectedIssues =
-            //   (repository.pullRequest.timelineItems.nodes ?? [])
-            //     .map((node) => node.subject)
-            //     .filter((subject) => subject && subject.number);
-
-            const linkedIssues = closingIssues;
 
             if (linkedIssues.length === 0) {
               core.setFailed(
